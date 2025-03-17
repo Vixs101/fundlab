@@ -1,8 +1,17 @@
+"use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 export default function Navbar() {
+
+    const scrollToSection = (sectionId: string) => {
+        const section = document.getElementById(sectionId)
+        if (section) {
+            section.scrollIntoView({ behavior: "smooth" })
+        }
+    }
+
     return (
         <header className="fixed top-0 left-0 right-0 z-50">
             <div className="h-full w-full bg-gray-700 rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-50">
@@ -22,13 +31,25 @@ export default function Navbar() {
                         <Link href="/" className="text-white hover:text-[#9B89FA] transition-colors">
                             Home
                         </Link>
-                        <Link href="/#" className="text-white hover:text-[#9B89FA] transition-colors">
+                        <Link href="#campaign" className="text-white hover:text-[#9B89FA] transition-colors">
                             Campaign
                         </Link>
-                        <Link href="/#" className="text-white hover:text-[#9B89FA] transition-colors">
+                        <Link href="/#"
+                            className="text-white hover:text-[#9B89FA] transition-colors"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                scrollToSection("campaign")
+                            }}
+                        >
                             How It Works
                         </Link>
-                        <Link href="/#" className="text-white hover:text-[#9B89FA] transition-colors">
+                        <Link href="/#"
+                            className="text-white hover:text-[#9B89FA] transition-colors"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                scrollToSection("about")
+                            }}
+                        >
                             About
                         </Link>
                     </nav>
