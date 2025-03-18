@@ -15,7 +15,7 @@ export default function Navbar() {
     return (
         <header className="fixed top-0 left-0 right-0 z-50">
             <div className="h-full w-full bg-gray-700 rounded-md bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-50">
-                <div className="flex items-center justify-between h-24 p-4 md:px-24 mx-auto">
+                <div className="flex items-center justify-between h-24 p-4 md:px-16 lg:px-24 mx-auto">
                     {/* Logo */}
                     <Link href="/">
                         <Image

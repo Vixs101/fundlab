@@ -48,7 +48,7 @@ export default function HeroSection() {
 
       {/* Back to top button */}
       <Button
-        className="fixed bottom-6 right-6 z-50 bg-[#6247AA] p-2 rounded-md shadow-lg hover:bg-[#5B49BE] transition-colors"
+        className="fixed bottom-6 right-6 z-50 bg-[#6247AA] p-2 rounded-md shadow-lg hover:bg-[#5B49BE] transition-colors animate-bounce"
         onClick={handleScrollTop}
       >
         <ChevronUp className="text-white" size={20} />
