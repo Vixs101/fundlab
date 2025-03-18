@@ -1,9 +1,11 @@
-// import { Button } from "@/components/ui/button"
+"use client"
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import Image from "next/image"
+import Link  from "next/link"
 
 export default function CampaignsPage() {
     return (
@@ -30,6 +32,7 @@ export default function CampaignsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full justify-center items-center">
                         {/* Campaign Card 1 */}
                         <CampaignCard
+                            id="quantum-drug-discovery"
                             image="/assets/campaign3.png"
                             title="Quantum Computing for Drug Discovery"
                             category="Pharmaceutical Research"
@@ -40,6 +43,7 @@ export default function CampaignsPage() {
 
                         {/* Campaign Card 2 */}
                         <CampaignCard
+                            id="sustainable-bioplastics"
                             image="/assets/campaign2.png"
                             title="Sustainable Bioplastics for Ocean Waste"
                             category="Environmental Science"
@@ -50,6 +54,7 @@ export default function CampaignsPage() {
 
                         {/* Campaign Card 3 */}
                         <CampaignCard
+                            id="ai-medical-diagnostics"
                             image="/assets/campaign1.png"
                             title="AI-Powered Medical Image Diagnostics"
                             category="Healthcare Technology"
@@ -60,6 +65,7 @@ export default function CampaignsPage() {
 
                         {/* Campaign Card 4 */}
                         <CampaignCard
+                            id="neural-interfaces"
                             image="/assets/campaign6.png"
                             title="Neural Interfaces for Cognitive Enhancement"
                             category="Neuroscience"
@@ -70,6 +76,7 @@ export default function CampaignsPage() {
 
                         {/* Campaign Card 5 */}
                         <CampaignCard
+                            id="crispr-rare-diseases"
                             image="/assets/campaign5.png"
                             title="CRISPR Applications for Rare Diseases worldwide"
                             category="Genetic Research"
@@ -80,6 +87,7 @@ export default function CampaignsPage() {
 
                         {/* Campaign Card 6 */}
                         <CampaignCard
+                            id="quantum-cryptography"
                             image="/assets/campaign4.png"
                             title="Quantum Cryptography for Secure Communications"
                             category="Information Security"
@@ -96,6 +104,7 @@ export default function CampaignsPage() {
 }
 
 interface CampaignCardProps {
+    id: string
     image: string
     title: string
     category: string
@@ -104,7 +113,7 @@ interface CampaignCardProps {
     days: number
 }
 
-function CampaignCard({ image, title, category, raised, progress, days }: CampaignCardProps) {
+function CampaignCard({ id, image, title, category, raised, progress, days }: CampaignCardProps) {
     return (
         <div className="bg-[#2A2A3A]/80 rounded-xl overflow-hidden border border-white/10 hover:border-[#5B49BE]/50 transition-all hover:shadow-lg hover:shadow-[#5B49BE]/20 xl:w-[391px] xl:h-[516px] p-4">
             <div className="relative">
@@ -127,10 +136,15 @@ function CampaignCard({ image, title, category, raised, progress, days }: Campai
                         <h4>0xe3443..46</h4>
                     </div>
                     <Button variant="default" className="bg-white rounded-full text-black">Active</Button>
-                    
+
                 </div>
                 <h3 className="text-white font-semibold mb-1 line-clamp-2">{title}</h3>
-                <p className="text-white/50 text-xs mb-4">{category}</p>
+                <p className="text-white/50 text-xs mb-4">{category} 
+                    <Link href={`/campaign/${id}`}
+                        className="cursor-pointer underline hover:text-[#9B89FA] ml-1">
+                        <span>view more</span>
+                    </Link>
+                </p>
 
                 <div className="flex justify-between items-center text-sm">
                     <div>
