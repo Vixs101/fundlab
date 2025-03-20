@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import ConnectWalletButton from "./connect-wallet-button"
 
 export default function Navbar() {
 
@@ -55,7 +55,7 @@ export default function Navbar() {
                     </nav>
 
                     {/* Connect Wallet Button */}
-                    <Button className="bg-white text-black hover:bg-gray-100 h-11 text-sm font-semibold">Connect Wallet</Button>
+                    <ConnectWalletButton />
                 </div>
             </div>
         </header>
