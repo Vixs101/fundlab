@@ -1,11 +1,13 @@
 "use client"
 import React from 'react'
 import Image from 'next/image'
-import { ChevronUp } from 'lucide-react'
-import { Button } from "@/components/ui/button";
+import { ChevronUp} from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation'
 
 
 export default function HeroSection() {
+  const router = useRouter()
   function handleScrollTop() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
@@ -33,9 +35,12 @@ export default function HeroSection() {
           Bridging scientists and supporters through transparent, decentralized crowdfunding. Fund groundbreaking
           research with Web3 security and community-driven trust.
         </p>
-        <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-          Start Research Campaign
-        </Button>
+
+          <Button size="lg" className="bg-white text-black hover:bg-gray-100"
+          onClick={() => router.push('/start-campaign')}
+          >
+            Start Research Campaign
+          </Button>
       </div>
 
       {/* Scroll indicator */}
