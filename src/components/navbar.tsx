@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
-import ConnectWalletButton from "./connect-wallet-button"
+import {CustomConnectWallet} from "@/components/ConnectWeb3Wallet"
 
 export default function Navbar() {
 
@@ -55,7 +55,7 @@ export default function Navbar() {
                     </nav>
 
                     {/* Connect Wallet Button */}
-                    <ConnectWalletButton />
+                    <CustomConnectWallet />
                 </div>
             </div>
         </header>
