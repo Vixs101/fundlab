@@ -1,9 +1,12 @@
 "use client"
 import { useState } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
+
 import { Menu, X } from "lucide-react"
+
+import {CustomConnectWallet} from "@/components/ConnectWeb3Wallet"
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -57,8 +60,7 @@ export default function Navbar() {
             >
               About
             </Link>
-          </nav>
-
+ 
           {/* Mobile Menu Button */}
           <button className="md:hidden text-white p-2" onClick={toggleMenu} aria-label="Toggle menu">
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
