@@ -1,13 +1,6 @@
-import { preferredTokens } from "@/constants/addresses/preferred-tokens";
-import { errorCode } from "@/lib/metamask-error-codes";
-
-export const retrievePreferredToken = (tokenAddress: string) => {
-  const token = preferredTokens.find(({ address }) => address === tokenAddress);
-  return token ? token : preferredTokens[0];
-}
 
 export const calculateTimeLeft = (timestamp: number) => {
-  let difference = timestamp * 1000 - Date.now();
+  const difference = timestamp * 1000 - Date.now();
 
   if (timestamp * 1000 < Date.now())
     return { completed: true, isLoading: false };
@@ -80,5 +73,5 @@ export const extractErrorMessage = (error: any) => {
   }
   
   // Fallback to MetaMask error codes
-  return errorCode[error?.code as keyof typeof errorCode] || error?.code || "Transaction failed";
+  return "Transaction failed";
 };

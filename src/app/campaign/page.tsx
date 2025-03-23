@@ -1,91 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getContract } from "@/hooks/useContract"
 import Image from "next/image"
 import Link from "next/link"
-import { ethers } from "ethers"
-import { convertToDecimalValue } from "@/functions/misc-functions"
-
-// Define the Campaign type based on the contract structure
-interface Contribution {
-  contributor: string
-  amount: string
-  timestamp: number
-}
-
-interface Campaign {
-  id: number
-  title: string
-  description: string
-  imageLink: string
-  goal: string
-  endDate: number
-  createdAt: number
-  creator: string
-  preferredToken: string
-  tokenDecimals: number
-  totalRaised: string
-  status: number
-  contributions: Contribution[]
-}
+import { CampaignCardProps, CampaignType } from "@/types"
+import { shortenAddress } from "@/functions/format"
+import { useReadAppContract } from "@/hooks/services/useContract"
 
 export default function CampaignsPage() {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([])
-  const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("active")
-
-  useEffect(() => {
-    const fetchCampaigns = async () => {
-      try {
-        setLoading(true)
-        const contract = getContract()
-        const campaignsData = await contract.getAllCampaigns()
-        
-        // Transform the data to match our interface
-        const formattedCampaigns = campaignsData.map((campaign: any) => ({
-          id: Number(campaign.id),
-          title: campaign.title,
-          description: campaign.description,
-          imageLink: campaign.imageLink,
-          goal: convertToDecimalValue(String(campaign.goal), 18),
-          endDate: Number(campaign.endDate),
-          createdAt: Number(campaign.createdAt),
-          creator: campaign.creator,
-          preferredToken: campaign.preferredToken,
-          tokenDecimals: Number(campaign.tokenDecimals),
-          totalRaised: convertToDecimalValue(String(campaign.totalRaised), 18),
-          status: Number(campaign.status),
-          contributions: campaign.contributions.map((contribution: any) => ({
-            contributor: contribution.contributor,
-            amount: convertToDecimalValue(String(campaign.amount), 18),
-            timestamp: Number(contribution.timestamp)
-          }))
-        }))
-        
-        setCampaigns(formattedCampaigns)
-      } catch (error) {
-        console.error("Failed to fetch campaigns:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCampaigns()
-  }, [])
-
-  // Filter campaigns based on active tab
-  const filteredCampaigns = campaigns.filter(campaign => {
-    const now = Math.floor(Date.now() / 1000)
-    if (activeTab === "active") {
-      return campaign.endDate > now && campaign.status === 0 // Active campaigns
-    } else {
-      return campaign.endDate < now || campaign.status !== 0 // Ended campaigns
-    }
-  })
+  const allCampaigns = useReadAppContract("getActiveCampaigns") as { loading: boolean; data: CampaignType[] }
 
   return (
     <section className="bg-[url('/assets/CampaignBg.png')] bg-cover bg-center min-h-screen">
@@ -108,26 +35,26 @@ export default function CampaignsPage() {
             </TabsList>
           </Tabs>
 
-          {loading ? (
+          {allCampaigns.loading ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-white">Loading campaigns...</p>
             </div>
-          ) : filteredCampaigns.length === 0 ? (
+          ) : allCampaigns?.data?.length === 0 || undefined ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-white">No {activeTab} campaigns found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full justify-center items-center">
-              {filteredCampaigns.map((campaign) => (
+              {allCampaigns?.data?.map((campaign) => (
                 <CampaignCard
                   key={campaign.id.toString()}
                   id={campaign.id.toString()}
                   image={campaign.imageLink || "/assets/campaign-placeholder.png"}
                   title={campaign.title}
                   category={campaign.description.length > 30 ? campaign.description.substring(0, 30) + "..." : campaign.description}
-                  raised={campaign.totalRaised}
-                  goal={campaign.goal}
-                  progress={calculateProgress(campaign.totalRaised, campaign.goal)}
+                  raised={campaign.totalRaised.toString()}
+                  goal={campaign.goal.toString()}
+                  progress={calculateProgress(campaign.totalRaised.toString(), campaign.goal.toString())}
                   days={calculateDaysLeft(campaign.endDate)}
                   creator={campaign.creator}
                   status={campaign.status}
@@ -153,23 +80,6 @@ function calculateDaysLeft(endDate: number): number {
   const now = Math.floor(Date.now() / 1000)
   const secondsLeft = endDate - now
   return secondsLeft > 0 ? Math.ceil(secondsLeft / (60 * 60 * 24)) : 0
-}
-
-function shortenAddress(address: string): string {
-  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
-}
-
-interface CampaignCardProps {
-  id: string
-  image: string
-  title: string
-  category: string
-  raised: string
-  goal: string
-  progress: number
-  days: number
-  creator: string
-  status: number
 }
 
 function CampaignCard({ id, image, title, category, raised, goal, progress, days, creator, status }: CampaignCardProps) {

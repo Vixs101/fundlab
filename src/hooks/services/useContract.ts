@@ -1,48 +1,30 @@
-import { Contract } from '@ethersproject/contracts';
-import ERC20_TOKEN_ABI from '@/constants/abis/token.json';
-import FUNDR_ABI from "@/constants/abis/fundr.json"
-import { FUNDR_CONTRACT } from '@/constants/addresses/fundr-contract'
-import { Contract as StandardEthersContract } from 'ethers';
-import { ZeroAddress } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
-import { getContract } from './contract/contracts';
-import { useMemo } from 'react';
-import { getOfflineContract } from './contract/offlineContract';
+// import ERC20_TOKEN_ABI from '@/constants/abis/erc20-token.json';
+import FUNDLAB_ABI from "@/constants/abis/FundLab.json"
+import { FUNDLAB_CONTRACT } from '@/constants/addresses/fundlab-contract'
+import { useReadContract } from 'wagmi';
+import { useEffect, useState } from "react"
 
-export const useWeb3ReactContract = (contractAddress: string, contractABI: any): Contract | null => {
-  const { account, provider } = useWeb3React();
-  const contract = useMemo(() => {
-    if (!contractAddress || contractAddress === ZeroAddress || !contractABI || !provider) return null;
+export const useReadAppContract = (functionName: string, args: unknown[] = []) => {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  const result = useReadContract({
+    abi: FUNDLAB_ABI,
+    address: FUNDLAB_CONTRACT,
+    functionName,
+    args,
+  });
 
-    return getContract(contractAddress, contractABI, provider, account);
-  }, [contractAddress, contractABI, provider, account]);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-  return contract;
-};
-
-// USES STANDARD ETHERS PROVIDER FOR WHEN web3-react DOESN'T HAVE A PROVIDER TO RELY ON
-// USED ONLY WHEN window.ethereum IS UNDEFINED (NO WALLET CONNECTION)
-export const useStandardEthersContract = (contractAddress: string, contractABI: any): StandardEthersContract | null => {
-  if (!contractAddress || contractAddress === ZeroAddress || !contractABI) return null;
-
-  return getOfflineContract(contractAddress, contractABI);
-};
-
-export const useContract = (contractAddress: string, contractABI: any): Contract | StandardEthersContract | null => {
-  const web3ReactContract = useWeb3ReactContract(contractAddress, contractABI);
-  const standardEthersContract = useStandardEthersContract(contractAddress, contractABI);
-
-  if (web3ReactContract) {
-    return web3ReactContract;
+  if (!isMounted) {
+    return { data: null, loading: true, error: null };
   }
 
-  return standardEthersContract;
-};
-
-export const useTokenContract = (tokenAddress: string): Contract | StandardEthersContract | null => {
-  return useContract(tokenAddress, ERC20_TOKEN_ABI);
-};
-
-export const useAppContract = (): Contract | StandardEthersContract | null => {
-  return useContract(FUNDR_CONTRACT, FUNDR_ABI);
+  return {
+    data: result.data as unknown,
+    loading: result.isPending,
+    error: result.error,
+  };
 };
