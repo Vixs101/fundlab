@@ -61,15 +61,16 @@ export default function Navbar() {
               About
             </Link>
  
-          {/* Mobile Menu Button */}
-          <button className="md:hidden text-white p-2" onClick={toggleMenu} aria-label="Toggle menu">
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button className="md:hidden text-white p-2" onClick={toggleMenu} aria-label="Toggle menu">
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
 
-          {/* Connect Wallet Button - Desktop */}
-          <div className="hidden md:block">
-            <Button className="bg-white text-black hover:bg-gray-100 h-11 text-sm font-semibold">Connect Wallet</Button>
-          </div>
+            {/* Connect Wallet Button - Desktop */}
+            <div className="hidden md:block">
+              <CustomConnectWallet />
+            </div>
+          </nav>
         </div>
 
         {/* Mobile Menu */}
@@ -86,7 +87,7 @@ export default function Navbar() {
               <Link
                 href="/campaign"
                 className="text-white hover:text-[#9B89FA] transition-colors py-2"
-            //     onClick={() => setIsMenuOpen(false)}
+                //     onClick={() => setIsMenuOpen(false)}
               >
                 Campaign
               </Link>
@@ -110,9 +111,8 @@ export default function Navbar() {
               >
                 About
               </Link>
-              <Button className="bg-white text-black hover:bg-gray-100 h-11 text-sm font-semibold w-full mt-2">
-                Connect Wallet
-              </Button>
+
+              <CustomConnectWallet />
             </nav>
           </div>
         )}
